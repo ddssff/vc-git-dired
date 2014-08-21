@@ -134,8 +134,8 @@ the listings to reflect arch version control"
 	 (git--set-mode-line)
 	 (use-local-map git--dired-mode-map)
 	 (let* ((directory (dired-current-directory))
-		(top (vc-git-root directory))
-		(subdir (concat "./" (drop-prefix top directory)))
+		(top (expand-file-name (vc-git-root directory)))
+		(subdir (drop-prefix top directory))
 		(inventory-alist (git--inventory directory))
 					; I don't think git-dired-do-changes has ever been set non-nil,
 					; which is why it is ok that git--changes never existed.
@@ -158,9 +158,9 @@ the listings to reflect arch version control"
   ; (message (format "Inventory: %S" inventory-alist))
   (let* ((file (dired-get-filename 'no-dir))
 	 ;(elem (assoc (concat subdir file) inventory-alist))
-	 (elem (assoc file inventory-alist))
+	 (elem (assoc (concat subdir file) inventory-alist))
 	 (changed (assoc file changes))
-	 (mark (git--make-tag file elem changed)))
+	 (mark (git--make-tag (concat subdir file) elem changed)))
     (beginning-of-line)
     (forward-char 12)
     (let* ((beg (point))
