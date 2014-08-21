@@ -107,14 +107,14 @@ before it is modified.")
 	 (manifest (git-ls-files-command buffer directory))
 	 (whatsnew (git-diff-name-status buffer directory)))
     ;; Merge the manifest and whatsnew to get an inventory
-    (merge-inventory whatsnew manifest)
+    (git-merge-inventory whatsnew manifest)
     ))
 
 (defun filter (condp lst)
     (delq nil
           (mapcar (lambda (x) (and (funcall condp x) x)) lst)))
 
-(defun merge-inventory (whatsnew manifest)
+(defun git-merge-inventory (whatsnew manifest)
   "Merge the manifest and whatsnew to get an inventory."
   (append manifest whatsnew)
   ; Remove entries from manifest if they are in whatsnew
