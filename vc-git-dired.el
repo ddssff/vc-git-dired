@@ -129,28 +129,30 @@ before it is modified.")
   "This hook is called every time a file or directory is read, with
 the buffer narrowed to the affected listings.  The function reformats
 the listings to reflect arch version control"
-  (message "Getting directory GIT info ... ")
-  (git--set-mode-line)
-  (use-local-map git--dired-mode-map)
-  (let* ((directory (dired-current-directory))
-	 (top (vc-git-root directory))
-	 (subdir (concat "./" (drop-prefix top directory)))
-	 (inventory-alist (git--inventory directory))
-	 ; I don't think git-dired-do-changes has ever been set non-nil,
-	 ; which is why it is ok that git--changes never existed.
-	 (changes (if git-dired-do-changes (git--changes) git-dired-changes-list)))
-    (if git-dired-do-changes
-	(set (make-local-variable 'git-dired-changes-list) changes))
-    (toggle-read-only -1)
-    (goto-char 0)
-    (dired-goto-next-file)
-    (if (looking-at "\\.$") (dired-next-line 2))
-    (while (dired-move-to-filename)
-      (git--edit-dired-line top subdir inventory-alist changes)
-      (dired-next-line 1))
-    (toggle-read-only 1)
-    (message "Getting directory GIT info ... done")
-    ))
+  (cond ((vc-git-root (dired-current-directory))
+	 (message "Getting directory GIT info ... ")
+	 (git--set-mode-line)
+	 (use-local-map git--dired-mode-map)
+	 (let* ((directory (dired-current-directory))
+		(top (vc-git-root directory))
+		(subdir (concat "./" (drop-prefix top directory)))
+		(inventory-alist (git--inventory directory))
+					; I don't think git-dired-do-changes has ever been set non-nil,
+					; which is why it is ok that git--changes never existed.
+		(changes (if git-dired-do-changes (git--changes) git-dired-changes-list)))
+	   (if git-dired-do-changes
+	       (set (make-local-variable 'git-dired-changes-list) changes))
+	   (toggle-read-only -1)
+	   (goto-char 0)
+	   (dired-goto-next-file)
+	   (if (looking-at "\\.$") (dired-next-line 2))
+	   (while (dired-move-to-filename)
+	     (git--edit-dired-line top subdir inventory-alist changes)
+	     (dired-next-line 1))
+	   (toggle-read-only 1)
+	   (message "Getting directory GIT info ... done")
+	   ))
+	))
 
 (defun git--edit-dired-line (top subdir inventory-alist changes)
   ; (message (format "Inventory: %S" inventory-alist))
