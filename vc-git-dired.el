@@ -3,8 +3,6 @@
 (require 'dired-aux)
 (require 'cl)
 
-(setq debug-on-error t)
-
 (defun drop-prefix (prefix string)
   (cond ((> (length prefix) (length string)) string)
 	((string= prefix (substring string 0 (length prefix)))
