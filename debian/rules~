@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/hlibrary.mk
+
+build/vc-darcs:: build-ghc-stamp
+
+binary-fixup/vc-darcs::
+	make all install PREFIX=debian/vc-darcs
+	install -Dp -s -m 755 dist-ghc/build/darcswrapper/darcswrapper debian/vc-darcs/usr/bin/darcswrapper

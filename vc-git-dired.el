@@ -122,9 +122,6 @@ before it is modified.")
   ;(append whatsnew (mapcar 'list (my-filter (lambda (x) (not (member x (mapcar 'car whatsnew)))) manifest)))
   )
 
-(defun my-filter (condp lst)
-  (delq nil (mapcar (lambda (x) (and (funcall condp x) x)) lst)))
-
 (defun git--dired-hook ()
   "This hook is called every time a file or directory is read, with
 the buffer narrowed to the affected listings.  The function reformats
@@ -137,8 +134,8 @@ the listings to reflect arch version control"
 		(top (expand-file-name (vc-git-root directory)))
 		(subdir (drop-prefix top directory))
 		(inventory-alist (git--inventory directory))
-					; I don't think git-dired-do-changes has ever been set non-nil,
-					; which is why it is ok that git--changes never existed.
+	        ; I don't think git-dired-do-changes has ever been set non-nil,
+		; which is why it is ok that git--changes never existed.
 		(changes (if git-dired-do-changes (git--changes) git-dired-changes-list)))
 	   (if git-dired-do-changes
 	       (set (make-local-variable 'git-dired-changes-list) changes))
@@ -155,7 +152,7 @@ the listings to reflect arch version control"
 	))
 
 (defun git--edit-dired-line (top subdir inventory-alist changes)
-  ; (message (format "Inventory: %S" inventory-alist))
+  ; (message (format "git--edit-dired-line: top=%S subdir=%S inventory-alist=%S" top subdir inventory-alist))
   (let* ((file (dired-get-filename 'no-dir))
 	 ;(elem (assoc (concat subdir file) inventory-alist))
 	 (elem (assoc (concat subdir file) inventory-alist))
