@@ -32,9 +32,9 @@
   (dired-relist-entry (dired-get-filename)))
 
 (defun vc-git-dired-remove-file ()
-  "Run \"git rm\" on current file."
+  "Run \"git rm --cached\" on current file, removing it from the index but leaving it in the tree."
   (interactive)
-  (vc-git-command "*vc*" 0 (dired-get-filename) "rm")
+  (vc-git-command "*vc*" 0 (dired-get-filename) "rm" "--cached")
   (dired-relist-entry (dired-get-filename)))
 
 (defvar git--dired-mode-map
