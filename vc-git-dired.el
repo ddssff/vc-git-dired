@@ -184,7 +184,7 @@ bindings starting with 't' are added (see below.)
   "If this is a git directory prepare to go into GIT mode."
   (cond ((and (vc-git-root default-directory)
 	      (not (string= major-mode 'git-dired-mode)))
-	 (setq dired-listing-switches "-l")
+	 (setq dired-listing-switches "-la")
 	 (git-dired-mode))))
 
 (defun git--look-for-buffer (path)
