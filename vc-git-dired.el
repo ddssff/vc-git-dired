@@ -153,7 +153,8 @@ before it is modified.")
   "This hook is called every time a file or directory is read, with
 the buffer narrowed to the affected listings.  The function reformats
 the listings to reflect arch version control"
-  (cond ((vc-git-root (dired-current-directory))
+  (cond ((and (vc-git-root (dired-current-directory))
+	      (not (string-match "/.git/" (dired-current-directory))))
 	 (message "Getting directory GIT info ... ")
 	 (git--set-mode-line)
 	 (use-local-map git--dired-mode-map)
