@@ -106,6 +106,25 @@ before it is modified.")
   (with-current-buffer buffer (parse-git-status-porcelain (buffer-string)))
   )
 
+(defun parse-git-remote-show-origin ()
+  (let ((re "^  Push  URL: \\(.*\\)$")
+	(s (car (cdr (cdr (split-string (buffer-string) "\n" t))))))
+    (if (string-match re s)
+	(match-string 1 s)
+      "nil")))
+
+(defun git-show-remote-origin (buffer directory)
+  (with-current-buffer buffer (erase-buffer))
+  (vc-git-command "*vc*" 0 nil "remote" "show" "-n" "origin" directory)
+  (with-current-buffer buffer (parse-git-remote-show-origin)))
+
+(defun insert-remote-origin (directory)
+  (let* ((buffer (get-buffer-create "*vc*"))
+	 (origin (git-show-remote-origin buffer directory)))
+    (goto-line 2)
+    (delete-region (point) (line-end-position))
+    (insert (concat "    Origin: " origin))))
+
 ; manifest is a list of (path, stage) pairs, where stage is a single
 ; digit.
 (defun git--inventory (directory)
@@ -148,6 +167,7 @@ the listings to reflect arch version control"
 	   (if git-dired-do-changes
 	       (set (make-local-variable 'git-dired-changes-list) changes))
 	   (toggle-read-only -1)
+	   (insert-remote-origin directory)
 	   (goto-char 0)
 	   (dired-goto-next-file)
 	   (if (looking-at "\\.$") (dired-next-line 2))
