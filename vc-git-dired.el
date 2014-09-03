@@ -37,12 +37,31 @@
   (vc-git-command "*vc*" 0 (dired-get-filename) "rm" "--cached")
   (dired-relist-entry (dired-get-filename)))
 
+(defun vc-git-dired-reset-patch ()
+  "Selective reset - run emerge on the edited and head versions of the current file."
+  (interactive)
+  (let* ((top (expand-file-name (vc-git-root default-directory)))
+	 (file (dired-get-file-for-visit))
+	 (patch (shell-command-to-string (concat "git diff " file)))
+	 (edited (get-buffer-create "*edited*"))
+	 (head (get-buffer-create "*head*")))
+    (with-current-buffer edited
+      (erase-buffer)
+      (insert-file-contents file))
+    (with-current-buffer head
+      (erase-buffer)
+      (insert (shell-command-to-string (concat "git diff " file " | (cd " top " && patch -s -R -p1 -o -)"))))
+    (emerge-buffers edited head)
+    (with-current-buffer emerge-merge-buffer
+      (write-region nil nil file))))
+
 (defvar git--dired-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "tl" 'vc-git-dired-print-log)
     (define-key map "ta" 'vc-git-dired-add-file)
     (define-key map "td" 'vc-git-dired-remove-file)
     (define-key map "t=" 'vc-git-dired-whatsnew)
+    (define-key map "tr" 'vc-git-dired-reset-patch)
     map))
 
 (defvar git-dired-do-changes nil
