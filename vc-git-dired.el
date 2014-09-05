@@ -140,11 +140,13 @@ before it is modified.")
   (with-current-buffer buffer (parse-git-remote-show-origin)))
 
 (defun insert-remote-origin (directory)
-  (let* ((buffer (get-buffer-create "*vc*"))
-	 (origin (git-show-remote-origin buffer directory)))
-    (goto-line 2)
-    (delete-region (point) (line-end-position))
-    (insert (concat "    Origin: " origin))))
+  (save-excursion
+    (let* ((buffer (get-buffer-create "*vc*"))
+	   (origin (git-show-remote-origin buffer directory)))
+      (goto-line 2)
+      ;(delete-region (point) (line-end-position))
+      ;(insert (concat "    Origin: " origin))
+      )))
 
 ; manifest is a list of (path, stage) pairs, where stage is a single
 ; digit.
