@@ -59,9 +59,11 @@
     (with-current-buffer head
       (erase-buffer)
       (insert (shell-command-to-string (concat "git diff " file " | (cd " top " && patch -s -R -p1 -o -)"))))
-    (emerge-buffers-with-ancestor head edited head nil nil) ; making edited ancestors puts all patches into perfer-B mode
-    (with-current-buffer emerge-merge-buffer
-      (write-region nil nil file))))
+    ; On exit write the file unconditionally.
+    (add-hook 'quit-hooks `(lambda () (emerge-files-exit ,file)))
+    ; making edited ancestors puts all patches into perfer-B mode
+    (emerge-buffers-with-ancestor head edited head nil quit-hooks)
+    ))
 
 (defvar git--dired-mode-map
   (let ((map (make-sparse-keymap)))
