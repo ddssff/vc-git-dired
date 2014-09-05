@@ -9,10 +9,12 @@
 	 (substring string (length prefix)))
 	(t string)))
 
-(defun vc-git-dired-whatsnew ()
-  "Run \"git diff\"."  ; Should be git diff HEAD?
-  (interactive)
-  (vc-git-command "*vc*" 1 (dired-current-directory) "diff")
+(defun vc-git-dired-whatsnew (arg)
+  "Run \"git diff\" to show changes in working copy.  With an argument adds --cached to omit uncommited changes."  ; Should be git diff HEAD?
+  (interactive "P")
+  (if arg
+      (vc-git-command "*vc*" 1 (dired-current-directory) "diff" "--cached")
+    (vc-git-command "*vc*" 1 (dired-current-directory) "diff"))
   (with-current-buffer "*vc*" (goto-char 0))
   (display-buffer "*vc*"))
 
