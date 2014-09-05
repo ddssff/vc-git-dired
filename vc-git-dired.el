@@ -30,14 +30,18 @@
 (defun vc-git-dired-add-file ()
   "Run \"git add\" on current file."
   (interactive)
-  (vc-git-command "*vc*" 0 (dired-get-filename) "add" "--")
-  (dired-relist-entry (dired-get-filename)))
+  (let ((name (dired-get-filename)))
+    (vc-git-command "*vc*" 0 name "add" "--")
+    (dired-relist-entry name)
+    (dired-goto-file name)))
 
 (defun vc-git-dired-remove-file ()
   "Run \"git rm --cached\" on current file, removing it from the index but leaving it in the tree."
   (interactive)
-  (vc-git-command "*vc*" 0 (dired-get-filename) "rm" "--cached")
-  (dired-relist-entry (dired-get-filename)))
+  (let ((name (dired-get-filename)))
+    (vc-git-command "*vc*" 0 name "rm" "--cached")
+    (dired-relist-entry name)
+    (dired-goto-file name)))
 
 (defun vc-git-dired-reset-patch ()
   "Selective reset - run emerge on the edited and head versions of the current file."
