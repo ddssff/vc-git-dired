@@ -43,12 +43,14 @@
     (dired-relist-entry name)
     (dired-goto-file name)))
 
-(defun vc-git-dired-reset-patch ()
+(defun vc-git-dired-reset-patch (arg)
   "Selective reset - run emerge on the edited and head versions of the current file."
-  (interactive)
+  (interactive "P")
   (let* ((top (expand-file-name (vc-git-root default-directory)))
 	 (file (dired-get-file-for-visit))
-	 (patch (shell-command-to-string (concat "git diff " file)))
+	 (patch (if arg
+		    (shell-command-to-string (concat "git diff --cached " file))
+		  (shell-command-to-string (concat "git diff " file))))
 	 (edited (get-buffer-create "*edited*"))
 	 (head (get-buffer-create "*head*")))
     (with-current-buffer edited
