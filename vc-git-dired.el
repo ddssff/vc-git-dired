@@ -112,6 +112,7 @@ before it is modified.")
 	    (split-string (buffer-string) "\n" t))))
 
 (defun parse-git-status-porcelain (b)
+  "Turn the argument string into an (path . status) alist.  Strip trailing slash off paths."
   (let ((re "^\\(..\\) \\(.*\\)$"))
     (mapcar (lambda (s)
 	      (if (string-match re s)
@@ -130,10 +131,10 @@ before it is modified.")
   (with-current-buffer buffer (parse-ls-files (buffer-string))))
 
 (defun git-status-porcelain (buffer directory)
+  "Return an alist of files and their git status.  Includes modified and untracked files only, files that are up to date are not included."
   (with-current-buffer buffer (erase-buffer))
-  (vc-git-command "*vc*" 0 nil "status" "--porcelain" directory)
-  (with-current-buffer buffer (parse-git-status-porcelain (buffer-string)))
-  )
+  (vc-git-command buffer 0 nil "status" "--porcelain" directory)
+  (with-current-buffer buffer (parse-git-status-porcelain (buffer-string))))
 
 (defun parse-git-remote-show-origin ()
   (let ((re "^  Push  URL: \\(.*\\)$")
@@ -156,17 +157,9 @@ before it is modified.")
       ;(insert (concat "    Origin: " origin))
       )))
 
-; manifest is a list of (path, stage) pairs, where stage is a single
-; digit.
 (defun git--inventory (directory)
-  (let* ((buffer (get-buffer-create "*vc*"))
-	 (manifest (git-ls-files-command buffer directory))
-	 (whatsnew (git-status-porcelain buffer directory)))
-    ;; Merge the manifest and whatsnew to get an inventory
-    ;(message (format "whatsnew: %S" whatsnew))
-    ;(message (format "manifest: %S" manifest))
-    (git-merge-inventory whatsnew manifest)
-    ))
+  (let* ((buffer (get-buffer-create "*vc*")))
+    (git-status-porcelain buffer directory)))
 
 (defun filter (condp lst)
     (delq nil
