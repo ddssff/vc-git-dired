@@ -1,3 +1,11 @@
+vc-git-dired (1.1) unstable; urgency=low
+
+  * Add tr, which interatively reverts the changes in a file
+  * Improve file status display
+  * Improve origin display
+
+ -- David Fox <dsf@seereason.com>  Sun, 07 Sep 2014 06:35:33 -0700
+
 vc-git-dired (1.0) unstable; urgency=low
 
   * Initial revision
