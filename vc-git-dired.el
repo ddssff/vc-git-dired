@@ -10,10 +10,10 @@
 	(t string)))
 
 (defun vc-git-dired-whatsnew (arg)
-  "Run \"git diff\" to show changes in working copy.  With an argument adds --cached to omit uncommited changes."  ; Should be git diff HEAD?
+  "Run \"git diff\" to show unstaged changes.  With an argument runs \"git diff --cached HEAD\" to show staged but uncommited changes."
   (interactive "P")
   (if arg
-      (vc-git-command "*vc*" 1 (dired-current-directory) "diff" "--cached")
+      (vc-git-command "*vc*" 1 (dired-current-directory) "diff" "--cached" "HEAD")
     (vc-git-command "*vc*" 1 (dired-current-directory) "diff"))
   (with-current-buffer "*vc*" (goto-char 0))
   (display-buffer "*vc*"))
