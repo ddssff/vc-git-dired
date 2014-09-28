@@ -19,10 +19,10 @@
   (display-buffer "*vc*"))
 
 (defun vc-git-dired-print-log (arg)
-  "Run \"git log\"."
+  "Run \"git log\".  With an argument show unpushed entries only."
   (interactive "P")
   (if arg
-      (vc-git-command "*vc*" 0 nil "log" "--full-diff" "--") ; FIXME: I don't think --full-diff works without a file list
+      (vc-git-command "*vc*" 0 nil "log" "--stat" "origin/master..HEAD")
     (vc-git-command "*vc*" 0 nil "log" "--"))
   (with-current-buffer "*vc*" (goto-char 0))
   (display-buffer "*vc*"))
