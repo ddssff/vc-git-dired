@@ -58,10 +58,12 @@
       (insert-file-contents file))
     (with-current-buffer head
       (erase-buffer)
+      ;(message (concat "git diff " file " | (cd " top " && patch -s -R -p1 -o -)"))
       (insert (shell-command-to-string (concat "git diff " file " | (cd " top " && patch -s -R -p1 -o -)"))))
     ; On exit write the file unconditionally.
     (add-hook 'quit-hooks `(lambda () (emerge-files-exit ,file)))
-    ; making edited ancestors puts all patches into perfer-B mode
+    ; We want the head on the left, edited on the right, and all the patches set
+    ; to show the edited version.  making edited ancestors puts all patches into perfer-B mode
     (emerge-buffers-with-ancestor head edited head nil quit-hooks)
     ))
 
