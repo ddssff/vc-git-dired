@@ -1,3 +1,10 @@
+vc-git-dired (1.2) unstable; urgency=low
+
+  * Fix missing status marks
+  * README about emacsclient and ssh.
+
+ -- David Fox <dsf@seereason.com>  Fri, 17 Apr 2015 10:40:48 -0700
+
 vc-git-dired (1.1) unstable; urgency=low
 
   * Add tr, which interatively reverts the changes in a file

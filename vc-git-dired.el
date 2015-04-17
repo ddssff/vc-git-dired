@@ -121,11 +121,11 @@ before it is modified.")
 
 (defun parse-git-status-porcelain (b)
   "Turn the argument string into an (path . status) alist.  Strip trailing slash off paths."
-  (let ((re "^\\(..\\) \\(.*\\)$"))
+  (let ((re "^\\(..\\) \\(\\(.*\\) -> \\)?\\(.*\\)$"))
     (mapcar (lambda (s)
 	      (if (string-match re s)
 		  (let* ((stat (match-string 1 s))
-			 (path (match-string 2 s)))
+			 (path (match-string 4 s)))
 		    (cons (if (string-match "^\\(.*\\)/$" path)
 			      (match-string 1 path)
 			    path)
@@ -134,15 +134,19 @@ before it is modified.")
 	    (split-string (buffer-string) "\n" t))))
 
 (defun git-ls-files-command (buffer directory)
-  (with-current-buffer buffer (erase-buffer))
-  (vc-git-command "*vc*" 0 nil "ls-files" "--full-name" "--others" "--directory" "--stage" directory)
-  (with-current-buffer buffer (parse-ls-files (buffer-string))))
+  (with-current-buffer buffer
+    (erase-buffer)
+    (vc-git-command "*vc*" 0 nil "ls-files" "--full-name" "--others" "--directory" "--stage" directory)
+    (parse-ls-files (buffer-string))))
 
 (defun git-status-porcelain (buffer directory)
   "Return an alist of files and their git status.  Includes modified and untracked files only, files that are up to date are not included."
-  (with-current-buffer buffer (erase-buffer))
-  (vc-git-command buffer 0 nil "status" "--porcelain" directory)
-  (with-current-buffer buffer (parse-git-status-porcelain (buffer-string))))
+  (with-current-buffer (get-buffer-create buffer)
+    (erase-buffer)
+    (let ((default-directory directory)
+	  (s0 (buffer-string)))
+      (vc-git-command buffer 0 nil "status" "--porcelain" ".")
+      (parse-git-status-porcelain (buffer-string)))))
 
 (defun parse-git-remote-show-origin ()
   (let ((re "^  Push  URL: \\(.*\\)$")
@@ -152,9 +156,10 @@ before it is modified.")
       "nil")))
 
 (defun git-show-remote-origin (buffer directory)
-  (with-current-buffer buffer (erase-buffer))
-  (vc-git-command "*vc*" 0 nil "remote" "show" "-n" "origin" directory)
-  (with-current-buffer buffer (parse-git-remote-show-origin)))
+  (with-current-buffer buffer
+    (erase-buffer)
+    (vc-git-command "*vc*" 0 nil "remote" "show" "-n" "origin" directory)
+    (parse-git-remote-show-origin)))
 
 (defun insert-remote-origin (directory)
   (save-excursion
