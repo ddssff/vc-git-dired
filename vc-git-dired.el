@@ -157,6 +157,7 @@ before it is modified.")
 
 (defun git-show-remote-origin (buffer directory)
   (with-current-buffer buffer
+    (setq default-directory directory)
     (erase-buffer)
     (vc-git-command "*vc*" 0 nil "remote" "show" "-n" "origin" directory)
     (parse-git-remote-show-origin)))
