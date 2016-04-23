@@ -34,7 +34,7 @@
   (with-current-buffer "*vc*"
     (if (looking-at "$") (insert "No matching log entries"))
     (goto-char 0))
-  (display-buffer "*vc*")))
+  (display-buffer "*vc*"))
 
 (defun vc-git-dired-add-file ()
   "Run \"git add\" on current file."
