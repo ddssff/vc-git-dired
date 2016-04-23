@@ -22,10 +22,19 @@
   "Run \"git log\".  With an argument show unpushed entries only."
   (interactive "P")
   (if arg
-      (vc-git-command "*vc*" 0 nil "log" "--stat" "origin/master..HEAD")
+      (let* ((inventory-alist (git--inventory (dired-current-directory)))
+	     (branch-info (cdr (assoc "." inventory-alist)))
+	     (re  "^.*\\.\\.\\.\\(.*\\)$")
+	     (arg (concat (if (string-match re branch-info)
+			      (match-string 1 branch-info)
+			    "origin/master")
+			  "..HEAD")))
+	(vc-git-command "*vc*" 0 nil "log" "--stat" arg))
     (vc-git-command "*vc*" 0 nil "log" "--"))
-  (with-current-buffer "*vc*" (goto-char 0))
-  (display-buffer "*vc*"))
+  (with-current-buffer "*vc*"
+    (if (looking-at "$") (insert "No matching log entries"))
+    (goto-char 0))
+  (display-buffer "*vc*")))
 
 (defun vc-git-dired-add-file ()
   "Run \"git add\" on current file."
