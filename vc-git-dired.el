@@ -32,7 +32,7 @@
 	(vc-git-command "*vc*" 0 nil "log" "--stat" arg))
     (vc-git-command "*vc*" 0 nil "log" "--"))
   (with-current-buffer "*vc*"
-    (if (looking-at "$") (insert "No matching log entries"))
+    (if (looking-at "$") (insert "All patches have been pushed"))
     (goto-char 0))
   (display-buffer "*vc*"))
 
