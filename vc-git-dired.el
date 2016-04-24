@@ -231,6 +231,7 @@ the listings to reflect arch version control"
 		 (delete-region beg (point))
 		 (insert branch)))
 	     (dired-next-line 2)))
+	   (beginning-of-line)
 	   (forward-char 12)
 	   (while (dired-move-to-filename)
 	     (git--edit-dired-line top subdir inventory-alist changes)
