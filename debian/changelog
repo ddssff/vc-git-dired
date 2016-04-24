@@ -1,3 +1,10 @@
+vc-git-dired (1.5) unstable; urgency=low
+
+  * The branch info output by git status -b may include a suffix
+    like [ahead 1]
+
+ -- David Fox <dsf@seereason.com>  Sun, 24 Apr 2016 08:09:24 -0700
+
 vc-git-dired (1.4) unstable; urgency=low
 
   * Replace info about "." with the branch

@@ -24,7 +24,7 @@
   (if arg
       (let* ((inventory-alist (git--inventory (dired-current-directory)))
 	     (branch-info (cdr (assoc "." inventory-alist)))
-	     (re  "^.*\\.\\.\\.\\(.*\\)$")
+	     (re  "^.*\\.\\.\\.\\([^ ]*\\)\\(.*\\)$")
 	     (arg (concat (if (string-match re branch-info)
 			      (match-string 1 branch-info)
 			    "origin/master")
@@ -32,8 +32,8 @@
 	(vc-git-command "*vc*" 0 nil "log" "--stat" arg))
     (vc-git-command "*vc*" 0 nil "log" "--"))
   (with-current-buffer "*vc*"
-    (if (looking-at "$") (insert "All patches have been pushed"))
-    (goto-char 0))
+    (goto-char 0)
+    (if (looking-at "$") (insert "All patches have been pushed")))
   (display-buffer "*vc*"))
 
 (defun vc-git-dired-add-file ()
