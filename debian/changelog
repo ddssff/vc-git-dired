@@ -1,3 +1,9 @@
+vc-git-dired (1.5.1) unstable; urgency=low
+
+  * Better code for inserting branch status.
+
+ -- David Fox <dsf@seereason.com>  Thu, 19 May 2016 10:46:32 -0700
+
 vc-git-dired (1.5) unstable; urgency=low
 
   * The branch info output by git status -b may include a suffix
