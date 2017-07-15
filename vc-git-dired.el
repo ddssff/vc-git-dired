@@ -261,7 +261,7 @@ bindings starting with 't' are added (see below.)
 \\{git--dired-mode-map}"
   ;(message "entering git-dired-mode")
   (set-keymap-parent git--dired-mode-map dired-mode-map)
-  (add-hook 'dired-after-readin-hook 'git--dired-hook nil t)
+  ;(add-hook 'dired-after-readin-hook 'git--dired-hook nil t)
   (setq git-dired-mode t)
   ;(message "finished git-dired-mode")
   )
@@ -282,5 +282,17 @@ bindings starting with 't' are added (see below.)
 	  (cons 'git--look-for-buffer find-directory-functions)))
 
 (add-hook 'dired-before-readin-hook 'git--dired-before-readin-hook nil nil)
+
+; Putting git--dired-hook on dired-after-readin-hook seems
+; to make emacs really slow, so instead rebind dired "g" to
+; run it.
+(defun run-git-dired ()
+  "Revert dired buffer and call git--dired-hook"
+  (interactive)
+  (revert-buffer)
+  (save-excursion
+    (git--dired-hook)))
+
+(define-key dired-mode-map "g" 'run-git-dired)
 
 (provide 'vc-git-dired)

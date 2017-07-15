@@ -1,3 +1,11 @@
+vc-git-dired (1.6) unstable; urgency=low
+
+  * Putting git--dired-hook on dired-after-readin-hook seems
+    to make emacs really slow, so instead provide run-git-dired
+    which can be bound, for example, to "g" in dired-map.
+
+ -- David Fox <dsf@seereason.com>  Sat, 15 Jul 2017 06:59:22 -0700
+
 vc-git-dired (1.5.1) unstable; urgency=low
 
   * Better code for inserting branch status.
