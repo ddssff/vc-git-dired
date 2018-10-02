@@ -1,3 +1,10 @@
+vc-git-dired (1.7) unstable; urgency=medium
+
+  * Show status of ignored files by adding --ignored to git status
+    command.
+
+ -- David Fox <dsf@seereason.com>  Thu, 03 May 2018 10:05:27 -0700
+
 vc-git-dired (1.6) unstable; urgency=low
 
   * Putting git--dired-hook on dired-after-readin-hook seems

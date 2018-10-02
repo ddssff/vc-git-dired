@@ -16,7 +16,7 @@
       (vc-git-command "*vc*" 1 (dired-current-directory) "diff" "--cached" "HEAD")
     (vc-git-command "*vc*" 1 (dired-current-directory) "diff"))
   (with-current-buffer "*vc*" (goto-char 0))
-  (display-buffer "*vc*"))
+  (display-buffer "*vc*" '((display-buffer-use-some-frame))))
 
 (defun vc-git-dired-print-log (arg)
   "Run \"git log\".  With an argument show unpushed entries only."
@@ -34,7 +34,7 @@
   (with-current-buffer "*vc*"
     (goto-char 0)
     (if (looking-at "$") (insert "All patches have been pushed")))
-  (display-buffer "*vc*"))
+  (display-buffer "*vc*" '((display-buffer-use-some-frame))))
 
 (defun vc-git-dired-add-file ()
   "Run \"git add\" on current file."
