@@ -9,6 +9,16 @@
 	 (substring string (length prefix)))
 	(t string)))
 
+(defface vc-git-color-untracked
+  '((((class color)
+      (background light))
+     (:foreground "#00ff00"))
+    (((class color)
+      (background dark))
+     (:foreground "#ff00ff")))
+  "Font lock mode face used to highlight files that are not tracked by git."
+  :group 'color-dired)
+
 (defun vc-git-dired-whatsnew (arg)
   "Run \"git diff\" to show unstaged changes.  With an argument runs \"git diff --cached HEAD\" to show staged but uncommited changes."
   (interactive "P")
@@ -16,7 +26,7 @@
       (vc-git-command "*vc*" 1 (dired-current-directory) "diff" "--cached" "HEAD")
     (vc-git-command "*vc*" 1 (dired-current-directory) "diff"))
   (with-current-buffer "*vc*" (goto-char 0))
-  (display-buffer "*vc*" '((display-buffer-next-window))))
+  (display-buffer "*vc*"))
 
 (defun vc-git-dired-print-log (arg)
   "Run \"git log\".  With an argument show unpushed entries only."
@@ -34,7 +44,7 @@
   (with-current-buffer "*vc*"
     (goto-char 0)
     (if (looking-at "$") (insert "All patches have been pushed")))
-  (display-buffer "*vc*" '((display-buffer-next-window) . ())))
+  (display-buffer "*vc*"))
 
 (defun vc-git-dired-add-file ()
   "Run \"git add\" on current file."
@@ -76,6 +86,13 @@
     (emerge-buffers-with-ancestor head edited head nil quit-hooks)
     ))
 
+(defun vc-git-dired-debug-message ()
+  "Output info about current file"
+  (interactive)
+  (let ((name (dired-get-filename))
+	(inventory (git--inventory (dired-current-directory))))
+    (message inventory)))
+
 (defvar git--dired-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "tl" 'vc-git-dired-print-log)
@@ -83,6 +100,7 @@
     (define-key map "td" 'vc-git-dired-remove-file)
     (define-key map "t=" 'vc-git-dired-whatsnew)
     (define-key map "tr" 'vc-git-dired-reset-patch)
+    (define-key map "t?" 'vc-git-dired-debug-message)
     map))
 
 (defvar git-dired-do-changes nil
@@ -251,7 +269,9 @@ the listings to reflect arch version control"
 	   (end (- (re-search-forward "[ ]+[^ ]+[ ]+[^ ]+[ ]+[^ ]+[ ]") 1))
 	   (fmt (format "%%-%ds" (- end beg))))
       (delete-region beg (- (point) 1))
-      (insert (format fmt (or mark ""))))))
+      (insert (format fmt (or mark "")))
+      ;(add-face-text-property beg (- (point) 1) '(:foreground "grey"))
+      )))
 
 (define-derived-mode git-dired-mode
   dired-mode "GIT"

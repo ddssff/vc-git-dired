@@ -1,3 +1,9 @@
+vc-git-dired (1.8) unstable; urgency=medium
+
+  * Add vc-git-dired-debug-message, bound to "t?"
+
+ -- David Fox <dsf@seereason.com>  Thu, 21 Feb 2019 09:08:21 -0800
+
 vc-git-dired (1.7) unstable; urgency=medium
 
   * Show status of ignored files by adding --ignored to git status
